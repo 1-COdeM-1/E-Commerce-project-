@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "dev" : "tsx watch ./src/index.ts" ,
-    "build" : "tsc " , 
-    "start" : "node ./dist/index.js"
+    "dev": "tsx watch ./src/index.ts",
+    "build": "tsc ",
+    "start": "node ./dist/index.js" , 
+    "db:push" : "drizzle-kit push "
   },
   "keywords": [],
   "author": "",
@@ -20,13 +21,16 @@
     "@sentry/profiling-node": "^10.70.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
-    "express": "^5.2.1"
+    "drizzle-orm": "^1.0.0-rc.4",
+    "express": "^5.2.1",
+    "pg": "^8.23.0",
+    "postgres": "^3.4.9"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^26.2.0",
     "@types/pg": "^8.23.1",
-    "drizzle-kit": "^0.31.10",
+    "drizzle-kit": "^1.0.0-rc.4",
     "tsx": "^4.23.12",
     "typescript": "^7.0.2"
   }
