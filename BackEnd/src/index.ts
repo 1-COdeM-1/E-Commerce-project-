@@ -4,6 +4,9 @@ import cors from "cors" ;
 import {getEnv} from "./lib/env" ;
 import {clerkMiddleware}from "@clerk/express";
 import { clerkWebHookHandler } from "./webhooks/clerk";
+import fs from "fs"
+import path from "path"
+
 const envVariables = getEnv() ;
 const PORT = envVariables.PORT  ;
 const app = express ();
@@ -18,8 +21,18 @@ app.use(cors());
 
 app.use(clerkMiddleware());
 
-
-
+const publicDir = path.join(__dirname , "../public");
+if(fs.existsSync(publicDir)){
+    app.get("/{*any}",(req ,res , next ) =>{
+    if(req.method !=="GET" && req.method !== "HEAD" ){
+        return next();
+    }
+    if(req.path.startsWith("/api") || req.path.startsWith("/webhooks")){
+        return next()
+    }
+    res.sendFile(path.join(publicDir , "index.html") , (err)=>next(err))
+})
+}
 
 app.listen(PORT , ()=> console.log("the app is running on port " , PORT));
 
