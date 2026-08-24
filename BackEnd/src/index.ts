@@ -5,7 +5,7 @@ import {clerkMiddleware}from "@clerk/express";
 import { clerkWebHookHandler } from "./webhooks/clerk";
 import fs from "fs"
 import path from "path"
-
+import cornJop from "./lib/cron" ;
 const envVariables = getEnv() ;
 const PORT = envVariables.PORT  ;
 const app = express ();
@@ -34,5 +34,10 @@ if(fs.existsSync(publicDir)){
 })
 }
 
-app.listen(PORT , ()=> console.log("the app is running on port " , PORT));
+app.listen(PORT , ()=> {
+    console.log("the app is running on port " , PORT)
+    if(envVariables.NODE_ENV === "production"){
+        cornJop.start();
+    }
+});
 
