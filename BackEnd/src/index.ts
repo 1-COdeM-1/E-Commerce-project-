@@ -17,7 +17,7 @@ app.post("/webhooks/clerk" , rawJson,(req, res)=>{
 
 app.use(express.json())
 app.use(express.urlencoded());
-app.use(cors());
+// app.use(cors());
 
 app.use(clerkMiddleware());
 
