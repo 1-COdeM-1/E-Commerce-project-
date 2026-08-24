@@ -1,7 +1,7 @@
 # --- Stage 1: build the SPA ---
 FROM node:22-bookworm-slim AS frontend-build
 WORKDIR /app/frontend
-COPY FrontEnd/ ./        # ← Match your actual folder name
+COPY FrontEnd/ ./
 ENV VITE_API_URL=
 ARG VITE_CLERK_PUBLISHABLE_KEY
 ENV VITE_CLERK_PUBLISHABLE_KEY=$VITE_CLERK_PUBLISHABLE_KEY
@@ -11,7 +11,7 @@ RUN npm install --no-audit --no-fund \
 # --- Stage 2: compile the API ---
 FROM node:22-bookworm-slim AS backend-build
 WORKDIR /app
-COPY BackEnd/ ./        # ← Match your actual folder name
+COPY BackEnd/ ./
 RUN npm install --no-audit --no-fund \
   && npm run build
 
