@@ -6,6 +6,9 @@ import { clerkWebHookHandler } from "./webhooks/clerk";
 import fs from "fs"
 import path from "path"
 import cornJop from "./lib/cron" ;
+import cors from "cors" ;
+import meRouter from "./routes/meRouter" ;
+import productRouter from "./routes/productRouter" ;
 const envVariables = getEnv() ;
 const PORT = envVariables.PORT  ;
 const app = express ();
@@ -16,10 +19,11 @@ app.post("/webhooks/clerk" , rawJson,(req, res)=>{
 
 app.use(express.json())
 app.use(express.urlencoded());
-// app.use(cors());
+app.use(cors());
 
 app.use(clerkMiddleware());
-
+app.use("api/me" , meRouter) ;
+app.use("api/products" , productRouter) ;
 const publicDir = path.join(__dirname , "../public");
 if(fs.existsSync(publicDir)){
     app.use(express.static(publicDir))
