@@ -10,6 +10,7 @@ import cors from "cors" ;
 import meRouter from "./routes/meRouter" ;
 import productRouter from "./routes/productRouter" ;
 import streamRouter from "./routes/streamRouter";
+import checkoutRouter from "./routes/checkoutRouter"
 const envVariables = getEnv() ;
 const PORT = envVariables.PORT  ;
 const app = express ();
@@ -26,6 +27,7 @@ app.use(clerkMiddleware());
 app.use("api/me" , meRouter) ;
 app.use("api/products" , productRouter) ;
 app.use("api/stream" ,streamRouter) ;
+app.use("api/checkout" , checkoutRouter) ;
 const publicDir = path.join(__dirname , "../public");
 if(fs.existsSync(publicDir)){
     app.use(express.static(publicDir))

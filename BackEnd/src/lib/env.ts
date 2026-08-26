@@ -14,9 +14,9 @@ const envSchema = z.object({
 
   POLAR_ACCESS_TOKEN: z.string().optional(),
   POLAR_WEBHOOK_SECRET: z.string().optional(),
-  POLAR_API_BASE: z.string().url().default("https://api.polar.sh").optional(),//delete optional
+  POLAR_API_BASE: z.string().url().default("https://api.polar.sh").optional(), // delete optional
 
-  POLAR_CHECKOUT_PRODUCT_ID: z.string().optional(),//delete optional and add uuid()
+  POLAR_CHECKOUT_PRODUCT_ID: z.string().uuid(),
 
   STREAM_API_KEY: z.string().min(1),
   STREAM_API_SECRET: z.string().min(1),
@@ -28,7 +28,7 @@ const envSchema = z.object({
   SENTRY_DSN: z.string().url().optional()
 })
 
-export type ENV = z.infer<typeof envSchema> ;
+export type Env = z.infer<typeof envSchema> ;
 
 export function loadEnv(){
     const result = envSchema.safeParse(process.env)
@@ -38,7 +38,7 @@ export function loadEnv(){
     }
     return result.data ;
 }
-let cachedEnv : ENV | null = null 
+let cachedEnv : Env | null = null ;
 export function getEnv (){
     if(!cachedEnv) {
         cachedEnv = loadEnv()
