@@ -1,13 +1,10 @@
-import {users} from "../db/schema" ;
-import {eq}from "drizzle-orm" ;
+import {UserRole, users} from "../db/schema" ;
+import {eq }from "drizzle-orm" ;
 import {db} from "../db/index" ;
-import { Response } from "express";
-export default async function getUserByClerkId (res:Response,clerkId : string){
-    try{
+type user = {role : UserRole , displayName : string , email : string}
+export default async function getUserByClerkId (clerkId : string) {
+    
         const [row] = await db.select().from(users).where(eq(users.clerkUserId , clerkId)).limit(1) ;
-        return row ;
-    }catch(e){
-        console.error(e) ;
-        return res.status(500).json({error : "internal server error while getting the local user by clerId"})
-    }
+        return row as user;
+    
 }

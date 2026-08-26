@@ -9,6 +9,7 @@ import cornJop from "./lib/cron" ;
 import cors from "cors" ;
 import meRouter from "./routes/meRouter" ;
 import productRouter from "./routes/productRouter" ;
+import streamRouter from "./routes/streamRouter";
 const envVariables = getEnv() ;
 const PORT = envVariables.PORT  ;
 const app = express ();
@@ -24,6 +25,7 @@ app.use(cors());
 app.use(clerkMiddleware());
 app.use("api/me" , meRouter) ;
 app.use("api/products" , productRouter) ;
+app.use("api/stream" ,streamRouter) ;
 const publicDir = path.join(__dirname , "../public");
 if(fs.existsSync(publicDir)){
     app.use(express.static(publicDir))
