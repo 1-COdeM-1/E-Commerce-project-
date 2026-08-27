@@ -14,8 +14,9 @@ const listProducts = async(req : Request , res : Response , next : NextFunction 
         next(e)
     }
 }
-const getCategories = async( res : Response , next : NextFunction )=>{
+const getCategories = async(req : Request, res : Response , next : NextFunction )=>{
     try{
+        const body = req.body
         const activeOnly = eq(products.active , true );
         const result = await db.select({category:products.category}).from(products).where(activeOnly) ;
         const categories = [...new Set(result.map(r=>r.category).sort((a , b)=>a.localeCompare(b)))]
