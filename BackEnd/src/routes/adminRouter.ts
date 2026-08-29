@@ -1,0 +1,11 @@
+import express from "express";
+import requireAdmin from "../middlewares/requireAdmin";
+import { createAdminProduct, getImageKitAuth, listAdminProducts, updateAdminProduct } from "../controllers/adminController";
+const router = express.Router() ;
+router.use(requireAdmin) ;
+router.get("/imagekit/auth" , getImageKitAuth) ;
+router.get("/products" , listAdminProducts) ;
+router.post("/products", createAdminProduct) ;
+router.post("/products/:id", updateAdminProduct) ;
+// router.delete("/products/:id", deleteAdminProduct);
+export default router ;
