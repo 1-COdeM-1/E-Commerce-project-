@@ -115,7 +115,7 @@ export async function updateAdminProduct(req: Request, res: Response, next: Next
     }
 }
 
-const deleteAdminProduct = async(req: Request, res: Response, next: NextFunction)=>{
+export const deleteAdminProduct = async(req: Request, res: Response, next: NextFunction)=>{ 
   try{
     const id = req.params.id ;
     if(!id) return res.status(400).json({error : "there isnot id in the params of the product which the user want to delete ."});
