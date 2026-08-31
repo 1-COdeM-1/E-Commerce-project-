@@ -14,7 +14,9 @@ import checkoutRouter from "./routes/checkoutRouter"
 import {polarWebhookHandler} from "./webhooks/polar" ;
 import * as Sentry from "@sentry/node"; 
 import { sentryClerkUserMiddleware } from "./middlewares/sentryClerkUser";
-const envVariables = getEnv() ;
+import orderRouter from"./routes/orderRouter" ;
+import adminRouter from "./routes/adminRouter" ;
+const envVariables = getEnv() ; 
 const PORT = envVariables.PORT  ;
 const app = express ();
 const rawJson = express.raw({type : "application/json" , limit : "1mb"}) ;
@@ -35,6 +37,8 @@ app.use("api/me" , meRouter) ;
 app.use("api/products" , productRouter) ;
 app.use("api/stream" ,streamRouter) ;
 app.use("api/checkout" , checkoutRouter) ;
+app.use("api/orders" , orderRouter) ;
+app.use("api/admin" , adminRouter) ;
 const publicDir = path.join(__dirname , "../public");
 if(fs.existsSync(publicDir)){
     app.use(express.static(publicDir))
