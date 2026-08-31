@@ -1,7 +1,9 @@
 
-import { Show, SignInButton, SignOutButton,SignUpButton, UserButton } from "@clerk/react";
-
+import { Show, SignInButton, SignOutButton,SignUpButton, useAuth, UserButton } from "@clerk/react";
+import PageLoader from "./components/PageLoader";
 function App() {
+  const {isLoaded} = useAuth() ;
+  if(!isLoaded) return <PageLoader />
   return (
     <>
       <Show when="signed-in">
@@ -13,7 +15,9 @@ function App() {
       </Show>
       <Show when="signed-in">
         <SignOutButton />
+      
       </Show>
+      <button className="btn btn-primary">click me </button>
     </>
   );
 }
