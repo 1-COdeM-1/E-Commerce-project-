@@ -33,12 +33,12 @@ app.use(cors());
 app.use(clerkMiddleware());
 app.use(sentryClerkUserMiddleware)
 // and you must run the last line to this middlware here after the clerk middleware and before all the routes 
-app.use("api/me" , meRouter) ;
-app.use("api/products" , productRouter) ;
-app.use("api/stream" ,streamRouter) ;
-app.use("api/checkout" , checkoutRouter) ;
-app.use("api/orders" , orderRouter) ;
-app.use("api/admin" , adminRouter) ;
+app.use("/api/me" , meRouter) ;
+app.use("/api/products" , productRouter) ;
+app.use("/api/stream" ,streamRouter) ;
+app.use("/api/checkout" , checkoutRouter) ;
+app.use("/api/orders" , orderRouter) ;
+app.use("/api/admin" , adminRouter) ;
 const publicDir = path.join(__dirname , "../public");
 if(fs.existsSync(publicDir)){
     app.use(express.static(publicDir))
