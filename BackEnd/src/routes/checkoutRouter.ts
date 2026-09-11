@@ -2,6 +2,6 @@
 import express from "express";
 import checkoutController from "../controllers/checkoutController";
 const router = express.Router() ;
-router.get("/" , checkoutController )
+router.post("/" , checkoutController )
 
 export default router ;

@@ -24,17 +24,19 @@ try{
     const {userId , isAuthenticated} = getAuth(req) ;
     if(!userId||!isAuthenticated) return res.status(401).json({error : "the user isnot authorized ."}) ;
     const parsed = cartSchema.safeParse(req.body) ;
+    console.log(parsed.data)
     if(!parsed.success) return res.status(400).json({ error: "Invalid cart", details: parsed.error.flatten() }); 
     if(!env.POLAR_ACCESS_TOKEN)return res.status(503).json({error : "internal server error the access token isnot found in the environment . "}) ; 
-    const localUser = getUserByClerkId(userId) ;
+    const localUser = await getUserByClerkId(userId) ;
     if (!localUser) {
       res.status(503).json({ error: "Account not synced yet" });
       return;
     }
     const ids = parsed.data.items.map(i=>i.productId) ; 
     const prodRows = await db.select().from(products).where(and(inArray(products.id , ids) , eq(products.active , true))) ;
+    console.log(`products : ${prodRows.length}`)
     if(prodRows.length !== ids.length) return res.status(400).json({error : "One or more products are invalid"}) ;
-
+    console.log("hello ")
     const byId = new Map(prodRows.map((p)=>[p.id , p])) ;
     let lines : CheckoutSessionLine[] = [] ;
     let totalCents = 0
@@ -46,18 +48,21 @@ try{
             unitPriceCents : p.priceCents ,
             quantity : line.quantity 
         })
+      }
     if (totalCents < 10) {
       res.status(400).json({
         error: "Total below Polar minimum (e.g. USD requires at least 10 cents)",
       });
         return;
     }
+    console.log(totalCents/100)
     const [session] = await db.insert(checkoutSessions).values({
-        userId : userId , 
+        userId : localUser.id , 
         lines , 
         totalCents ,
-        currency : "egb" 
+        currency : "egp" 
     }).returning();
+    console.log(`the session : ${session}`)
     const successUrl = `${env.FRONT_END_URL}/checkout/return?checkout_id={CHECKOUT_ID}`;
     const returnUrl = `${env.FRONT_END_URL}/cart`;
     const checkout = await polarCreateCheckout(env, {
@@ -66,7 +71,7 @@ try{
         [env.POLAR_CHECKOUT_PRODUCT_ID]: [
           {
             amount_type: "fixed",
-            price_currency: "egb",
+            price_currency: "egp",
             price_amount: totalCents
           },
         ],
@@ -77,9 +82,11 @@ try{
       external_customer_id: userId,
       metadata: { checkout_session_id: session.id },
     });
+    
     await db.update(checkoutSessions).set({polarCheckoutId : checkout.id}).where(eq(checkoutSessions.id , session.id)) ;
+    console.log("after the update of the checkoutsessions")
     res.json({checkoutUrl: checkout.url}) ;
-    }
+    console.log("after the final res")
 }catch(e){
     next(e) ;
 } 
