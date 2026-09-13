@@ -9,7 +9,7 @@ export function formatOrderWhen(iso, opts = {}) {
   const { dateStyle = "medium" } = opts;
   if (!iso) return "";
 
-  const date = new Date(iso);
+  const date = new Date(iso.includes(" ") ? iso.replace(" ", "T") : iso);
   if (Number.isNaN(date.getTime())) return "";
 
   return new Intl.DateTimeFormat(undefined, {
