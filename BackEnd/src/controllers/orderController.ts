@@ -20,6 +20,7 @@ export async function orderController(req : Request , res  : Response, next : Ne
         const previewByOrder = new Map() ;
         if(orderIds.length > 0) {
             const itemRows = await db.select({orderId : orderItems.orderId , quantity : orderItems.quantity , name : products.name , slug : products.slug , imageUrl : products.imageUrl}).from(orderItems).innerJoin(products , eq(orderItems.productId , products.id)).where(inArray(orderItems.orderId , orderIds)).orderBy(desc(orderItems.productId)) ;
+            // console.log("itemRows" , itemRows)/////////////////////
             for(const row of itemRows){
                 const list = previewByOrder.get(row.orderId) ?? [] ;
                 list.push({
@@ -31,10 +32,12 @@ export async function orderController(req : Request , res  : Response, next : Ne
                 previewByOrder.set(row.orderId , list) ;
             }
         }
+        // console.log(`previewByOrder.entries() = ` , previewByOrder.entries())///////////////////////////////
         const ordersPayload = rows.map((o)=>({
             ...o , 
-            previewItems : previewByOrder.get(o.polarOrderId) ?? []
+            previewItems : previewByOrder.get(o.id) ?? []
         }));
+        // console.log(ordersPayload[0].previewItems) ;
         res.json({ orders: ordersPayload });
     }catch(e){
         next (e)
