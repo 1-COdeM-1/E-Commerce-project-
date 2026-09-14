@@ -8,6 +8,7 @@ import CartPage from "./pages/CartPage";
 import OrdersPage from "./pages/OrdersPage";
 import CheckoutReturnPage from "./pages/CheckoutReturnPage";
 import ProductDetailPage from "./pages/ProductPage";
+import { SentryDemoPage } from "./pages/SentryDemoPage";
 function App() {
   const {isLoaded , isSignedIn} = useAuth() ;
   if(!isLoaded) return <PageLoader />
@@ -19,7 +20,7 @@ function App() {
         <Route path = "/orders" element = {isSignedIn ? <OrdersPage /> : <Navigate to={"/"} replace/>} />
         <Route path="/checkout/return" element={<CheckoutReturnPage />} />    
         <Route path="/product/:slug" element={<ProductDetailPage />} />    
-
+        <Route path="/demo-sentry" element={<SentryDemoPage />} />
       </Routes>
     </Layout>
   );
