@@ -15,7 +15,7 @@ export async function orderController(req : Request , res  : Response, next : Ne
         const localUser = await getUserByClerkId(userId) ;
         if(!localUser) return res.status(503).json({error : "the account not synced yet ."}) ;
         const rows = isStaff(localUser.role) ? await db.select().from(orders).orderBy(desc(orders.createdAt)) 
-            : await db.select().from(orders).where(eq(orders.polarOrderId , userId)).orderBy(desc(orders.createdAt)) ;
+            : await db.select().from(orders).where(eq(orders.userId , localUser.id)).orderBy(desc(orders.createdAt)) ;
         const orderIds = rows.map(e =>e.id) ;
         const previewByOrder = new Map() ;
         if(orderIds.length > 0) {
