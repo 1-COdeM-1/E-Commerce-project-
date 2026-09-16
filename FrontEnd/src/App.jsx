@@ -9,6 +9,9 @@ import OrdersPage from "./pages/OrdersPage";
 import CheckoutReturnPage from "./pages/CheckoutReturnPage";
 import ProductDetailPage from "./pages/ProductPage";
 import { SentryDemoPage } from "./pages/SentryDemoPage";
+import OrderDetailPage from "./pages/OrderDetailPage";
+import OrderSummaryPage from "./pages/OrderSummaryPage";
+import OrderChatPage from "./pages/OrderChatPage";
 function App() {
   const {isLoaded , isSignedIn} = useAuth() ;
   if(!isLoaded) return <PageLoader />
@@ -21,6 +24,10 @@ function App() {
         <Route path="/checkout/return" element={<CheckoutReturnPage />} />    
         <Route path="/product/:slug" element={<ProductDetailPage />} />    
         <Route path="/demo-sentry" element={<SentryDemoPage />} />
+        <Route path="/orders/:id" element={<OrderDetailPage />}>
+          <Route index element = {<OrderSummaryPage />} />
+          <Route path="chat" element={<OrderChatPage/>} />
+        </Route>
       </Routes>
     </Layout>
   );

@@ -64,10 +64,12 @@ export const getOrder = async(req : Request , res  : Response, next : NextFuncti
             .from(orderItems)
             .innerJoin(products, eq(orderItems.productId, products.id))
             .where(eq(orderItems.orderId, order.id));
+            // console.log(items) //////////////////////////////
         const theOrder = {
             ...order , 
             items
         }
+        // console.log(theOrder)
         res.json({order : theOrder}) ;
     }catch(e){
         next(e);
