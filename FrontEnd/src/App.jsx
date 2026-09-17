@@ -12,6 +12,7 @@ import { SentryDemoPage } from "./pages/SentryDemoPage";
 import OrderDetailPage from "./pages/OrderDetailPage";
 import OrderSummaryPage from "./pages/OrderSummaryPage";
 import OrderChatPage from "./pages/OrderChatPage";
+import OrderVideoPage from "./pages/OrderVideoPage";
 function App() {
   const {isLoaded , isSignedIn} = useAuth() ;
   if(!isLoaded) return <PageLoader />
@@ -28,6 +29,7 @@ function App() {
           <Route index element = {<OrderSummaryPage />} />
           <Route path="chat" element={<OrderChatPage/>} />
         </Route>
+        <Route path="/orders/:id/call" element={isSignedIn ? <OrderVideoPage /> : <Navigate to={"/"} replace />}/>
       </Routes>
     </Layout>
   );
