@@ -3,7 +3,7 @@ import ImageKit from "@imagekit/nodejs";
 import { getEnv } from "../lib/env";
 import { db } from "../db";
 import { orderItems, products } from "../db/schema";
-import { desc , eq , count, and } from "drizzle-orm";
+import { desc , eq , count} from "drizzle-orm";
 import z from "zod" ;
 import { deleteImageKitAsset } from "../lib/imageKit";
 const env = getEnv() ;
