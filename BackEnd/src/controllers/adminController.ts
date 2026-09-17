@@ -62,6 +62,7 @@ export function getImageKitAuth(_req: Request, res: Response, next: NextFunction
 export async function listAdminProducts(_req: Request, res: Response, next: NextFunction){
     try{
         const rows = await db.select().from(products).orderBy(desc(products.createdAt)) ;
+        console.log(rows); //////////////////////////////////////
         res.json({products : rows})
     }catch(e){
         next(e)

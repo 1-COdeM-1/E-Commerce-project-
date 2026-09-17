@@ -10,6 +10,7 @@ export default async function requireAdmin(req : Request , res : Response , next
         const localUser = await getUserByClerkId(userId) ;
         const roleOk = isAdmin(localUser.role) ;
         if(!roleOk) return res.status(403).json({error : "admins only "})
+        next();
     }catch(e){
         next(e) ;
     }

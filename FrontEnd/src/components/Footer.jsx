@@ -14,7 +14,7 @@ export default function Footer() {
 
 export default Footers-center gap-2 font-semibold text-base-content">
               <TruckIcon className="size-8 text-primary" aria-hidden />
-              Northwind Supply
+              C0deM Supply
             </div>
             <p className="mt-3 text-sm leading-relaxed text-base-content/65">
               Curated hardware and workspace tools. Paid orders include priority support; chat with
@@ -70,7 +70,7 @@ export default Footers-center gap-2 font-semibold text-base-content">
 
         <div className="mt-10 space-y-4 border-t border-base-300 pt-6">
           <p className="text-center text-xs text-base-content/50">
-            © {new Date().getFullYear()} Northwind Supply · All prices in EGP
+            © {new Date().getFullYear()} C0deM Supply · All prices in EGP
           </p>
         </div>
       </div>
