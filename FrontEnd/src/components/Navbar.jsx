@@ -2,20 +2,24 @@ import { Show, SignInButton, useAuth, UserButton , SignOutButton } from "@clerk/
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../lib/api";
 import { Link } from "react-router";
+import { useState } from "react";
 
 import {
   LogInIcon,
+  MenuIcon,
   PackageIcon,
   SettingsIcon,
   ShoppingBagIcon,
   ShoppingCartIcon,
   StoreIcon,
-  LogOutIcon
+  LogOutIcon,
+  XIcon,
 } from "lucide-react";
 import { useCart } from "../store/cart";
 
 const Navbar = () => {
   const { getToken, isSignedIn } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const { data: meData } = useQuery({
     queryKey: ["me"],
@@ -28,7 +32,8 @@ const Navbar = () => {
   const cartCount = useCart((s) => s.items.reduce((n, line) => n + line.quantity, 0));
 
   return (
-    <header className="sticky top-0 z-50 border-b border-base-300 bg-base-100/95 shadow-sm backdrop-blur-md">
+    <>
+      <header className="sticky top-0 z-50 border-b border-base-300 bg-base-100/95 shadow-sm backdrop-blur-md">
       <div className="navbar mx-auto min-h-14 max-w-7xl px-4 py-2.5 md:px-6 md:py-3">
         <div className="flex-1">
           <Link
@@ -42,7 +47,7 @@ const Navbar = () => {
           </Link>
         </div>
 
-        <nav className="flex items-center gap-1 md:gap-1.5">
+        <nav className="flex items-center gap-1 md:gap-1.5 max-[490px]:hidden">
           <Link to="/" className="btn btn-ghost gap-2 font-medium">
             <ShoppingBagIcon className="size-6 opacity-90" aria-hidden />
             <span className="hidden sm:inline">Shop</span>
@@ -107,8 +112,115 @@ const Navbar = () => {
             </SignOutButton>
           </Show>
         </nav>
+
+        <button
+          type="button"
+          className="btn btn-square btn-ghost hidden max-[490px]:inline-flex"
+          aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={mobileMenuOpen}
+          onClick={() => setMobileMenuOpen((open) => !open)}
+        >
+          {mobileMenuOpen ? <XIcon className="size-6" aria-hidden /> : <MenuIcon className="size-6" aria-hidden />}
+        </button>
       </div>
-    </header>
+
+      </header>
+
+      <div
+        className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-200 min-[491px]:hidden ${
+          mobileMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+        }`}
+        aria-hidden="true"
+        onClick={() => setMobileMenuOpen(false)}
+      />
+
+      <aside
+        className={`fixed right-0 top-0 z-50 flex h-svh w-[min(86vw,20rem)] flex-col border-l border-base-300 bg-base-100 p-5 shadow-2xl transition-transform duration-300 min-[491px]:hidden ${
+          mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+        aria-label="Mobile navigation"
+      >
+        <div className="mb-8 flex items-center justify-between">
+          <Link
+            to="/"
+            className="flex items-center gap-2 font-mono text-lg font-semibold uppercase tracking-wide"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <span className="flex size-10 items-center justify-center rounded-lg bg-primary/15 p-1 text-primary">
+              <StoreIcon className="size-8" aria-hidden />
+            </span>
+            <span>C0deM</span>
+          </Link>
+          <button
+            type="button"
+            className="btn btn-square btn-ghost"
+            aria-label="Close navigation menu"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <XIcon className="size-5" aria-hidden />
+          </button>
+        </div>
+
+        <nav className="flex flex-col gap-2">
+          <Link to="/" className="btn btn-ghost justify-start gap-3" onClick={() => setMobileMenuOpen(false)}>
+            <ShoppingBagIcon className="size-5" aria-hidden />
+            Shop
+          </Link>
+
+          <Show when={"signed-in"}>
+            <Link to="/orders" className="btn btn-ghost justify-start gap-3" onClick={() => setMobileMenuOpen(false)}>
+              <PackageIcon className="size-5" aria-hidden />
+              Orders
+            </Link>
+
+            {role === "admin" ? (
+              <Link to="/admin" className="btn btn-ghost justify-start gap-3 text-secondary" onClick={() => setMobileMenuOpen(false)}>
+                <SettingsIcon className="size-5" aria-hidden />
+                Admin
+              </Link>
+            ) : null}
+          </Show>
+
+          <Link to="/cart" className="btn btn-ghost justify-start gap-3" onClick={() => setMobileMenuOpen(false)}>
+            <span className="indicator">
+              {cartCount > 0 ? (
+                <span className="indicator-item badge badge-sm badge-primary min-w-2 px-1.5 font-sans text-xs tabular-nums">
+                  {cartCount > 99 ? "99+" : cartCount}
+                </span>
+              ) : null}
+              <ShoppingCartIcon className="size-5" aria-hidden />
+            </span>
+            Cart
+          </Link>
+
+          <div className="my-3 border-t border-base-300" />
+
+          <Show when={"signed-out"}>
+            <SignInButton mode="modal">
+              <button type="button" className="btn btn-primary justify-start gap-3" onClick={() => setMobileMenuOpen(false)}>
+                <LogInIcon className="size-5" aria-hidden />
+                Sign in
+              </button>
+            </SignInButton>
+          </Show>
+
+          <Show when={"signed-in"}>
+            <div className="flex items-center gap-3 px-3 py-2">
+              <UserButton appearance={{ elements: { avatarBox: "h-10 w-10 ring-2 ring-base-300" } }} />
+              {role === "support" || role === "admin" ? (
+                <span className="badge badge-primary badge-sm capitalize">{role}</span>
+              ) : null}
+            </div>
+            <SignOutButton mode="modal">
+              <button type="button" className="btn btn-primary justify-start gap-3" onClick={() => setMobileMenuOpen(false)}>
+                <LogOutIcon className="size-5" aria-hidden />
+                Sign out
+              </button>
+            </SignOutButton>
+          </Show>
+        </nav>
+      </aside>
+    </>
   );
 };
 

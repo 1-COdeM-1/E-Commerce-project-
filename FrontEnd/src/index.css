@@ -2,3 +2,70 @@
 @plugin "daisyui" {
    themes: dark --default;
  }
+
+@media (max-width: 640px) {
+  .admin-products-table table,
+  .admin-products-table thead,
+  .admin-products-table tbody,
+  .admin-products-table tr,
+  .admin-products-table td {
+    display: block;
+  }
+
+  .admin-products-table thead {
+    display: none;
+  }
+
+  .admin-products-table tr {
+    padding: 1rem;
+  }
+
+  .admin-products-table tr + tr {
+    border-top: 1px solid color-mix(in oklab, currentColor 12%, transparent);
+  }
+
+  .admin-products-table td {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.35rem 0;
+    border: 0;
+    min-width: 0;
+  }
+
+  .admin-products-table td::before {
+    content: attr(data-label);
+    color: color-mix(in oklab, currentColor 60%, transparent);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .admin-products-table td:first-child {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 0.75rem;
+  }
+
+  .admin-products-table td:first-child::before {
+    display: none;
+  }
+
+  .admin-products-table td:last-child {
+    display: block;
+    padding-top: 0.75rem;
+  }
+
+  .admin-products-table td:last-child::before {
+    display: block;
+    margin-bottom: 0.35rem;
+  }
+}
+
+@media (max-width: 490px) {
+  .modal-box {
+    max-height: calc(100svh - 1rem);
+  }
+}

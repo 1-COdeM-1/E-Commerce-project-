@@ -128,7 +128,7 @@ export function AdminProductForm({ initial, saving, error, getToken, onCancel, o
         />
       </label>
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 gap-2 min-[491px]:grid-cols-2">
         <label className="form-control">
           <span className="label-text">Price (USD)</span>
           <input

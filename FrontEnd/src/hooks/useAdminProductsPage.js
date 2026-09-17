@@ -2,12 +2,33 @@ import { useAuth } from "@clerk/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { apiFetch } from "../lib/api";
+import { useSearchParams } from "react-router";
 
 export function useAdminProductsPage() {
   const { getToken, isSignedIn } = useAuth();
   const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState(null);
+
+
+      const [searchParams , setSearchParams] = useSearchParams() ;
+      const categoryFilter = searchParams.get("category")?.trim() ?? "" ; 
+  
+      const setCategory = (category) => {
+      const next = new URLSearchParams(searchParams);
+  
+      if (!category) next.delete("category");
+      else next.set("category", category);
+  
+      setSearchParams(next, { replace: true });
+    };
+      const {data : categoriesData  ,isLoading : loadingCategories} = useQuery({
+          queryKey : ["products-categories"] ,
+          queryFn : ()=>apiFetch("/api/products/categories")
+      }); 
+      const categories = categoriesData?.categories ?? [];
+      const categoryChipsLoading = loadingCategories && categories.length === 0;
+  
 
   const { data: meData } = useQuery({
     queryKey: ["me"],
@@ -18,8 +39,13 @@ export function useAdminProductsPage() {
   const isAdmin = meData?.user?.role === "admin";
 
   const { data, isLoading } = useQuery({
-    queryKey: ["admin", "products"],
-    queryFn: () => apiFetch("/api/admin/products", { getToken }),
+    queryKey: ["admin", "products", categoryFilter],
+    queryFn: () => apiFetch(
+      categoryFilter
+        ? `/api/admin/products?category=${encodeURIComponent(categoryFilter)}`
+        : "/api/admin/products",
+      { getToken },
+    ),
     enabled: isSignedIn && isAdmin,
   });
   
@@ -71,5 +97,9 @@ export function useAdminProductsPage() {
     isLoading,
     saveMutation,
     deleteMutation,
+    categories , 
+    categoryFilter , 
+    setCategory , 
+    categoryChipsLoading
   };
 }

@@ -74,7 +74,7 @@ export function OrdersListSkeleton() {
 
 export function AdminProductsTableSkeleton() {
   return (
-    <div className="overflow-x-auto rounded-box border border-base-300 bg-base-100">
+    <div className="admin-products-table overflow-hidden rounded-box border border-base-300 bg-base-100">
       <table className="table">
         <thead>
           <tr>

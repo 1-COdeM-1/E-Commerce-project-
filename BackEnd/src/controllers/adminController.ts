@@ -3,7 +3,7 @@ import ImageKit from "@imagekit/nodejs";
 import { getEnv } from "../lib/env";
 import { db } from "../db";
 import { orderItems, products } from "../db/schema";
-import { desc , eq , count } from "drizzle-orm";
+import { desc , eq , count, and } from "drizzle-orm";
 import z from "zod" ;
 import { deleteImageKitAsset } from "../lib/imageKit";
 const env = getEnv() ;
@@ -59,15 +59,30 @@ export function getImageKitAuth(_req: Request, res: Response, next: NextFunction
   }
  
 }
-export async function listAdminProducts(_req: Request, res: Response, next: NextFunction){
+export async function listAdminProducts(req: Request, res: Response, next: NextFunction){
     try{
-        const rows = await db.select().from(products).orderBy(desc(products.createdAt)) ;
-        console.log(rows); //////////////////////////////////////
-        res.json({products : rows})
+        const cat = typeof req.query.category === "string" ? req.query.category :"";
+        const whereClause = eq(products.category , cat) ;
+        let rows ;
+        if(cat){
+          rows = await db.select().from(products).where(whereClause).orderBy(desc(products.createdAt)); ;
+        }else{
+          rows = await db.select().from(products).orderBy(desc(products.createdAt));
+        }
+        res.json({products : rows}) ;
     }catch(e){
         next(e)
     }
   }
+export  const getCategories = async(_req : Request, res : Response , next : NextFunction )=>{
+    try{
+        const result = await db.select({category:products.category}).from(products) ;
+        const categories = [...new Set(result.map(r=>r.category).sort((a , b)=>a.localeCompare(b)))]
+        res.json({categories}) ;
+    }catch (e){
+        next(e)
+    }
+}
 
   export async function createAdminProduct(req: Request, res: Response, next: NextFunction) {
   try {

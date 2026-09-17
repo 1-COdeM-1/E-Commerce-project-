@@ -5,6 +5,7 @@ import { PackageIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { formatPrice } from "../utils/format.js";
 import { AdminProductForm } from "../components/AdminProductForm.jsx";
 import { Navigate } from "react-router";
+import HomeCats from "../components/HomeCats.jsx";
 
 function AdminProductsPage() {
   const {
@@ -18,6 +19,10 @@ function AdminProductsPage() {
     isLoading,
     saveMutation,
     deleteMutation,
+    categories , 
+    setCategory, 
+    categoryChipsLoading ,
+    categoryFilter
   } = useAdminProductsPage();
 
   if (meData && meData.user?.role !== "admin") {
@@ -31,18 +36,18 @@ function AdminProductsPage() {
   }
 
   return (
-    <div className="text-left">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-2">
-          <PackageIcon className="size-8 text-secondary" aria-hidden />
+    <div className="min-w-0 text-left">
+      <div className="mb-6 flex flex-col items-start justify-between gap-4 min-[491px]:flex-row min-[491px]:items-center">
+        <div className="flex min-w-0 items-center gap-2">
+          <PackageIcon className="size-7 shrink-0 text-secondary sm:size-8" aria-hidden />
           <div>
-            <h1 className="text-2xl font-bold text-base-content">Products</h1>
+            <h1 className="text-xl font-bold text-base-content sm:text-2xl">Products</h1>
             <p className="text-sm text-base-content/60">Manage catalog (admin only).</p>
           </div>
         </div>
         <button
           type="button"
-          className="btn btn-primary btn-sm gap-2"
+          className="btn btn-primary btn-sm w-full gap-2 min-[491px]:w-auto"
           onClick={() => {
             setEditing(null);
             setModalOpen(true);
@@ -52,12 +57,20 @@ function AdminProductsPage() {
           Add product
         </button>
       </div>
+      <div>
+        <HomeCats
+            categoryFilter={categoryFilter}
+            setCategory={setCategory}
+            categories={categories}
+            categoryChipsLoading={categoryChipsLoading}
+      />
+      </div>
 
       {isLoading ? (
         <AdminProductsTableSkeleton />
       ) : (
-        <div className="overflow-x-auto rounded-box border border-base-300 bg-base-100">
-          <table className="table table-zebra">
+        <div className="admin-products-table overflow-hidden rounded-box border border-base-300 bg-base-100">
+          <table className="table table-zebra w-full">
             <thead>
               <tr>
                 <th className="w-24">Preview</th>
@@ -73,7 +86,7 @@ function AdminProductsPage() {
             <tbody>
               {products.map((p) => (
                 <tr key={p.id}>
-                  <td className="align-middle">
+                  <td data-label="Preview" className="align-middle">
                     <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-base-300 bg-base-200 shadow-sm ring-1 ring-base-300/50 sm:h-18 sm:w-18">
                       {p.imageUrl ? (
                         <img
@@ -90,21 +103,21 @@ function AdminProductsPage() {
                       )}
                     </div>
                   </td>
-                  <td className="font-medium">{p.name}</td>
-                  <td>
+                  <td data-label="Name" className="font-medium">{p.name}</td>
+                  <td data-label="Category">
                     <span className="badge badge-ghost badge-sm">{p.category ?? "-"}</span>
                   </td>
-                  <td className="font-mono text-sm opacity-80">{p.slug}</td>
-                  <td>{formatPrice(p.priceCents, p.currency)}</td>
-                  <td>
+                  <td data-label="Slug" className="break-all font-mono text-sm opacity-80">{p.slug}</td>
+                  <td data-label="Price">{formatPrice(p.priceCents, p.currency)}</td>
+                  <td data-label="Active">
                     {p.active ? (
                       <span className="badge badge-success badge-sm">yes</span>
                     ) : (
                       <span className="badge badge-ghost badge-sm">no</span>
                     )}
                   </td>
-                  <td>
-                    <div className="flex flex-wrap items-center justify-end gap-1">
+                  <td data-label="Actions">
+                    <div className="flex flex-wrap items-center justify-end gap-1 max-[640px]:justify-start">
                       <button
                         type="button"
                         className="btn btn-ghost btn-xs gap-1"
@@ -140,7 +153,7 @@ function AdminProductsPage() {
       )}
 
       <dialog className={`modal ${modalOpen ? "modal-open" : ""}`}>
-        <div className="modal-box max-w-lg">
+        <div className="modal-box w-[calc(100vw-2rem)] max-w-lg p-4 sm:p-6">
           <h3 className="text-lg font-bold">{editing ? "Edit product" : "New product"}</h3>
 
           <AdminProductForm
